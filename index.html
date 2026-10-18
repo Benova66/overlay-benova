@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Overlay Benova</title>
+<!--
+  OVERLAY BENOVA (Euro Truck) — PORTRAIT 1080x1920 — servi SANS CONNEXION par le panel des logs
+  TikTok LIVE Studio : Ajouter une source > Lien > https://benova66.github.io/overlay-benova/
+  OBS : Source > Navigateur > URL (même adresse) — Largeur 1080 / Hauteur 1920
+  L'overlay occupe les 545 px du bas (y = 1375 → 1920), le reste est transparent.
+  Aperçu dans un navigateur : ajoute #preview à la fin de l'URL pour voir un fond gris.
+-->
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#1f5dff;
+    --blue-hi:#4d8bff;
+    --blue-deep:#0a2a8a;
+    --gold:#f5c518;
+    --dark:#03060d;
+  }
+  html,body{margin:0;padding:0;width:1080px;height:1920px;background:transparent;overflow:hidden;}
+  body.preview{background:linear-gradient(#2a2f38,#15181d);}
+  body.preview::before{content:"ZONE JEU (1080 x 1375)";position:absolute;top:640px;width:1080px;text-align:center;
+    font:700 40px 'Barlow Condensed',sans-serif;color:#ffffff33;letter-spacing:4px;}
+
+  #ov{position:absolute;left:0;top:1375px;width:1080px;height:545px;font-family:'Barlow Condensed',sans-serif;}
+
+  /* ---------- PANNEAU ---------- */
+  .panel{position:absolute;left:0;top:80px;width:1080px;height:465px;
+    background:
+      radial-gradient(ellipse 60% 70% at 50% 0%, #0d2a6b55, transparent 70%),
+      linear-gradient(180deg,#081633 0%,#040a18 35%,var(--dark) 100%);
+    clip-path:polygon(0 0,330px 0,370px 26px,710px 26px,750px 0,1080px 0,1080px 100%,0 100%);
+    overflow:hidden;}
+  .edge{position:absolute;left:0;top:80px;width:1080px;height:30px;pointer-events:none;}
+  .edge svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 6px var(--blue)) drop-shadow(0 0 14px var(--blue));}
+  .edge path{fill:none;stroke:var(--blue-hi);stroke-width:4;}
+
+  /* reflet qui balaye */
+  .sweep{position:absolute;top:0;left:-400px;width:300px;height:100%;
+    background:linear-gradient(100deg,transparent,#4d8bff22,transparent);
+    animation:sweep 6s linear infinite;}
+  @keyframes sweep{to{left:1200px;}}
+
+  /* grille fine */
+  .grid{position:absolute;inset:0;opacity:.18;
+    background-image:linear-gradient(#1f5dff22 1px,transparent 1px),linear-gradient(90deg,#1f5dff22 1px,transparent 1px);
+    background-size:36px 36px;
+    -webkit-mask-image:linear-gradient(180deg,#000,transparent 70%);mask-image:linear-gradient(180deg,#000,transparent 70%);}
+
+  /* bandes diagonales */
+  .stripes{position:absolute;top:80px;width:150px;height:200px;}
+  .stripes i{position:absolute;top:0;width:20px;height:200px;transform:skewX(-35deg);
+    background:linear-gradient(180deg,var(--blue-hi),var(--blue) 60%,transparent);box-shadow:0 0 18px var(--blue);}
+  .stripes.l{left:225px;} .stripes.l i:nth-child(1){left:0;} .stripes.l i:nth-child(2){left:34px;opacity:.55;}
+  .stripes.r{right:225px;} .stripes.r i{transform:skewX(35deg);} .stripes.r i:nth-child(1){right:0;} .stripes.r i:nth-child(2){right:34px;opacity:.55;}
+
+  /* ---------- DRAPEAUX ---------- */
+  .flag{position:absolute;top:96px;width:200px;height:200px;
+    background:
+      repeating-linear-gradient(115deg,#ffffff00 0 40px,#ffffff14 60px,#00000030 90px,#ffffff00 120px),
+      radial-gradient(circle at 40% 40%,#2c5cff,#0b2fae 55%,#061b6b);
+    background-size:240px 240px,100% 100%;
+    animation:wave 5s linear infinite;
+    -webkit-mask-image:radial-gradient(circle,#000 55%,transparent 72%);mask-image:radial-gradient(circle,#000 55%,transparent 72%);}
+  .flag.l{left:10px;} .flag.r{right:10px;animation-direction:reverse;}
+  @keyframes wave{to{background-position:240px 0,0 0;}}
+  .flag svg{position:absolute;inset:0;width:100%;height:100%;}
+  .flag polygon{fill:var(--gold);filter:drop-shadow(0 0 3px #000a);}
+
+  /* ---------- LOGO ---------- */
+  .logo{position:absolute;left:340px;top:0;width:400px;height:270px;text-align:center;}
+  .arc{position:absolute;left:0;top:0;width:400px;height:130px;}
+  .arc polygon{fill:var(--blue);filter:drop-shadow(0 0 6px var(--blue));}
+  .arc g{animation:twinkle 3s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
+  @keyframes twinkle{0%,100%{opacity:1}50%{opacity:.45}}
+  .euro{position:absolute;left:0;top:78px;width:400px;
+    font-family:'Permanent Marker',cursive;font-size:150px;line-height:1;transform:rotate(-6deg);
+    color:#fff;letter-spacing:2px;
+    background:linear-gradient(180deg,#ffffff 0%,#ffffff 45%,#c8d4ea 60%,#ffffff 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    filter:drop-shadow(4px 5px 0 var(--blue)) drop-shadow(0 0 18px #1f5dffaa);}
+  .tag{position:absolute;left:0;top:248px;width:400px;font-weight:700;font-size:24px;letter-spacing:9px;color:var(--blue-hi);
+    text-shadow:0 0 10px var(--blue);}
+
+  /* ---------- CARTES RÉSEAUX ---------- */
+  .card{position:absolute;top:310px;width:470px;height:112px;}
+  .card.l{left:42px;} .card.r{right:42px;}
+  .card .bg{position:absolute;inset:0;
+    background:linear-gradient(180deg,#0d1d40,#060c1c);
+    clip-path:polygon(28px 0,100% 0,calc(100% - 28px) 100%,0 100%);}
+  .card .bd{position:absolute;inset:0;pointer-events:none;}
+  .card .bd svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 5px var(--blue));}
+  .card .bd polygon{fill:none;stroke:var(--blue);stroke-width:2.5;}
+  .card .glow{position:absolute;left:90px;right:90px;bottom:6px;height:3px;border-radius:3px;
+    background:var(--blue-hi);box-shadow:0 0 14px 3px var(--blue);animation:pulse 2.4s ease-in-out infinite;}
+  .card.r .glow{animation-delay:1.2s;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .card .in{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:22px;}
+  .ico{width:58px;height:58px;display:flex;align-items:center;justify-content:center;}
+  .ico svg{width:52px;height:52px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+    filter:drop-shadow(0 0 6px var(--blue));}
+  .sep{width:5px;height:62px;background:var(--blue);box-shadow:0 0 10px var(--blue);}
+  .txt{display:flex;flex-direction:column;line-height:1;}
+  .txt small{font-weight:500;font-size:22px;letter-spacing:6px;color:var(--blue-hi);}
+  .txt b{font-weight:800;font-size:46px;letter-spacing:2px;color:#fff;text-transform:uppercase;}
+
+  .ico.tiktok svg{stroke:none;width:50px;height:50px;filter:drop-shadow(0 0 4px #000a);}
+
+  /* ---------- ROUTE ---------- */
+  .road{position:absolute;left:0;bottom:0;width:1080px;height:80px;
+    background:linear-gradient(180deg,#0b0e14,#05070b);border-top:3px solid #1f5dff88;
+    box-shadow:0 -6px 18px #1f5dff33 inset;overflow:hidden;}
+  .road::before,.road::after{content:"";position:absolute;left:0;width:1080px;height:3px;background:#e9edf2aa;}
+  .road::before{top:10px;} .road::after{bottom:10px;}
+  .lane{position:absolute;top:37px;left:0;width:2160px;height:6px;
+    background:repeating-linear-gradient(90deg,#f5c518 0 70px,transparent 70px 130px);
+    animation:drive 1.3s linear infinite;}
+  @keyframes drive{to{transform:translateX(-130px);}}
+</style>
+</head>
+<body>
+<div id="ov">
+  <div class="panel">
+    <div class="grid"></div>
+    <div class="sweep"></div>
+  </div>
+  <div class="edge">
+    <svg viewBox="0 0 1080 30" preserveAspectRatio="none">
+      <path d="M0 2 H330 L370 28 H710 L750 2 H1080"/>
+    </svg>
+  </div>
+
+  <div class="stripes l"><i></i><i></i></div>
+  <div class="stripes r"><i></i><i></i></div>
+
+  <div class="flag l"><svg viewBox="0 0 200 200" class="stars"></svg></div>
+  <div class="flag r"><svg viewBox="0 0 200 200" class="stars"></svg></div>
+
+  <div class="logo">
+    <svg class="arc" viewBox="0 0 400 130" id="arc"></svg>
+    <div class="euro">EURO</div>
+    <div class="tag">TRUCK SIMULATOR</div>
+  </div>
+
+  <!-- TikTok -->
+  <div class="card l">
+    <div class="bg"></div>
+    <div class="bd"><svg viewBox="0 0 470 112" preserveAspectRatio="none"><polygon points="28,1 469,1 442,111 1,111"/></svg></div>
+    <div class="in">
+      <div class="ico tiktok"><svg viewBox="-1 -1 26 26" aria-label="TikTok"><path fill="#25F4EE" transform="translate(-.6 -.6)" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.440-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.070-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/><path fill="#FE2C55" transform="translate(.6 .6)" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.440-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.070-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/><path fill="#fff" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.440-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.070-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></div>
+      <div class="sep"></div>
+      <div class="txt"><small>TIKTOK</small><b>benovaniglo</b></div>
+    </div>
+    <div class="glow"></div>
+  </div>
+
+  <!-- Discord -->
+  <div class="card r">
+    <div class="bg"></div>
+    <div class="bd"><svg viewBox="0 0 470 112" preserveAspectRatio="none"><polygon points="28,1 469,1 442,111 1,111"/></svg></div>
+    <div class="in">
+      <div class="ico"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/><circle cx="9" cy="11.5" r=".6"/><circle cx="15" cy="11.5" r=".6"/></svg></div>
+      <div class="sep"></div>
+      <div class="txt"><small>DISCORD</small><b>benovarp</b></div>
+    </div>
+    <div class="glow"></div>
+  </div>
+
+  <div class="road"><div class="lane"></div></div>
+</div>
+
+<script>
+  // Aperçu navigateur (#preview) : fond gris + page réduite pour tenir entière dans la fenêtre
+  if (location.hash === '#preview') {
+    document.body.classList.add('preview');
+    const ajuster = () => {
+      const k = Math.min(innerWidth / 1080, innerHeight / 1920);
+      document.documentElement.style.cssText = 'width:auto;height:auto;background:#0b0d12;overflow:hidden';
+      document.body.style.cssText = 'position:absolute;top:0;left:' + Math.max(0, (innerWidth - 1080 * k) / 2) + 'px;transform-origin:0 0;transform:scale(' + k + ')';
+    };
+    ajuster(); addEventListener('resize', ajuster);
+  }
+
+  // Étoile 5 branches centrée en (cx,cy), rayon r
+  function star(cx, cy, r){
+    let p = [];
+    for (let i = 0; i < 10; i++){
+      const a = -Math.PI/2 + i*Math.PI/5;
+      const rr = i % 2 ? r*0.42 : r;
+      p.push((cx + rr*Math.cos(a)).toFixed(1) + ',' + (cy + rr*Math.sin(a)).toFixed(1));
+    }
+    return '<polygon points="' + p.join(' ') + '"/>';
+  }
+
+  // Cercle de 12 étoiles dorées sur les drapeaux
+  document.querySelectorAll('.flag .stars').forEach(svg => {
+    let h = '';
+    for (let i = 0; i < 12; i++){
+      const a = i * Math.PI/6;
+      h += star(100 + 58*Math.sin(a), 100 - 58*Math.cos(a), 11);
+    }
+    svg.innerHTML = h;
+  });
+
+  // Arc de 5 étoiles bleues au-dessus du logo
+  const arc = document.getElementById('arc');
+  let h = '';
+  [-60, -30, 0, 30, 60].forEach((deg, i) => {
+    const a = deg * Math.PI/180;
+    const x = 200 + 150*Math.sin(a), y = 150 - 135*Math.cos(a);
+    h += '<g style="animation-delay:' + (i*0.4) + 's">' + star(x, y, i === 2 ? 17 : 14) + '</g>';
+  });
+  arc.innerHTML = h;
+</script>
+</body>
+</html>
